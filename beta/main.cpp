@@ -2,7 +2,7 @@
 #include <iostream>
 #include <QApplication>
 
-#include "window.h"
+#include "view.h"
 
 int main (int argc, char **argv) {
 	
