@@ -39,7 +39,7 @@ Window::Window(QWidget * parent)
 RecordTab::RecordTab(QWidget * parent)
 	: QWidget(parent)
 {
-	model = new Model;
+	model = new MonitorModel;
 	
 	recordLabel = new QLabel(tr("Record Name:"));
 	

@@ -7,6 +7,7 @@
 
 using namespace std;
 using namespace epics::pvaClient;
+using namespace epics::monitorWorker;
 
 /*
  *	Gets pvaClient singleton and creates a pvAccess channel to the record.
@@ -15,7 +16,7 @@ using namespace epics::pvaClient;
  *	string of the parent class will contain an error message.
  *
  */
-bool Model::connect(const string & recordName)
+bool MonitorModel::connect(const string & recordName)
 {
 	try {
 	
@@ -29,11 +30,14 @@ bool Model::connect(const string & recordName)
 
 		getData->getPVStructure()->dumpValue(recordStream);
 
-		recordData = recordStream.str();
+		*recordData = recordStream.str();
 		
+		monitorWorker = new MonitorWorker(channel->monitor(""), recordData);
+		monitorWorker->start();
+
 	} catch (std::runtime_error e) {
 		
-		recordData = string("Error: ") + string(e.what());	
+		*recordData = string("Error: ") + string(e.what());	
 		
 		return false;
 

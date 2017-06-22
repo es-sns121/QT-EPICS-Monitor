@@ -29,7 +29,7 @@ class RecordTab : public QWidget {
 		QLineEdit * recordLine;
 		QTextEdit * recordText;
 
-		Model * model;
+		MonitorModel * model;
 };
 
 class Window : public QWidget {
