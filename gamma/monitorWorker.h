@@ -16,10 +16,11 @@ class MonitorRunnable : public epicsThreadRunable {
 
 		void run();
 		void wait() { isDone->wait(); }
-	
+		void setDone(const bool & b) { done = b; }
 	private:
 		void updateRecordData();
-		
+	
+		bool done;
 		epicsEvent * isDone;
 		epics::pvaClient::PvaClientMonitorPtr     monitor;
 		epics::pvaClient::PvaClientMonitorDataPtr monitorData;
@@ -31,12 +32,8 @@ class MonitorWorker {
 		MonitorWorker(epics::pvaClient::PvaClientMonitorPtr monitor,
 					  std::string * recordData);
 		
-		~MonitorWorker();
-	
 		int start();
-		bool isActive();
 		void exit();
-		
 		std::string getErrMsg () { return errorMsg; }	
 	
 	private:

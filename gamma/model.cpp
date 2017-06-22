@@ -31,10 +31,13 @@ bool MonitorModel::connect(const string & recordName)
 		getData->getPVStructure()->dumpValue(recordStream);
 
 		*recordData = recordStream.str();
+	
+		if(monitorWorker)
+			monitorWorker->exit();
 		
 		monitorWorker = new MonitorWorker(channel->monitor(""), recordData);
 		monitorWorker->start();
-
+	
 	} catch (std::runtime_error e) {
 		
 		*recordData = string("Error: ") + string(e.what());	

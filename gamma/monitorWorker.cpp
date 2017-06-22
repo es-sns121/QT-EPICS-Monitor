@@ -11,7 +11,7 @@ using namespace epics::monitorWorker;
 
 MonitorRunnable::MonitorRunnable (PvaClientMonitorPtr monitor,
 								  string * recordData)
-				: isDone(new epicsEvent), monitor(monitor), recordData(recordData)
+				: done(false), isDone(new epicsEvent), monitor(monitor), recordData(recordData)
 {	
 }
 
@@ -35,8 +35,13 @@ void MonitorRunnable::run ()
 {
 	monitorData = monitor->getData();
 	while (true) {
+		if (done)
+			return; 
+		
 		monitor->waitEvent();
-
+		
+		if (done)
+			return; 
 		updateRecordData();
 
 		monitor->releaseEvent();
@@ -59,12 +64,6 @@ MonitorWorker::MonitorWorker (PvaClientMonitorPtr monitor, string * recordData)
 	}
 }
 
-MonitorWorker::~MonitorWorker ()
-{
-	delete runnable;	
-	delete thread;
-}
-
 int MonitorWorker::start() 
 {
 	if (isSafe) {
@@ -75,16 +74,10 @@ int MonitorWorker::start()
 	return -1;
 }
 
-bool MonitorWorker::isActive()
-{
-	if (thread == NULL) return false;
-	if (thread->isSuspended()) return true;
-	if (thread->isCurrentThread()) return true;
-
-	return false;
-}
-
 void MonitorWorker::exit()
 {
-	thread->exit();
+	if (thread) {
+		runnable->setDone(true);
+		thread->exitWait(.1);
+	}
 }
