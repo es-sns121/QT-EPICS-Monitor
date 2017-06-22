@@ -15,6 +15,9 @@ from a record and then displays it in a text box.
 The GUI implements a tab mechanism, allowing multiple records' data to be 
 viewed at once.
 
+The moc\_put.cpp file is the output of the Qt 'moc' program. 'moc' means
+Meta Object Comiler. This file is generated, and does not have to be written.
+
 ## Beta
 
 Beta builds on alpha by splitting the code up into a model/view relationship.
