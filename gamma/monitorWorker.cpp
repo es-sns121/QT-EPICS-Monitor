@@ -28,23 +28,37 @@ void MonitorRunnable::updateRecordData ()
 	
 	monitorData->getPVStructure()->dumpValue(dumpStream);
 
+	string dumpString = dumpStream.str();
+	
+/* Only update the data if its changed */
+	if (*recordData != dumpString)
 	*recordData = dumpStream.str();
 }
 
 void MonitorRunnable::run () 
 {
 	monitorData = monitor->getData();
+	
+	bool result(false);
+/* return if 'done' is set. otherwise poll for new data. */
 	while (true) {
 		if (done)
 			return; 
 		
-		monitor->waitEvent();
+	/* Release every half second so the thread has a chance to quit without
+	 * being updated */
+		result = monitor->waitEvent(.5);
 		
-		if (done)
-			return; 
+		if (done) {
+			if (result)
+				monitor->releaseEvent();
+			return;
+		}
+		
 		updateRecordData();
-
-		monitor->releaseEvent();
+		
+		if (result)
+			monitor->releaseEvent();
 	}
 }
 
@@ -64,6 +78,7 @@ MonitorWorker::MonitorWorker (PvaClientMonitorPtr monitor, string * recordData)
 	}
 }
 
+/* If safe, start the thread. */
 int MonitorWorker::start() 
 {
 	if (isSafe) {
@@ -74,6 +89,11 @@ int MonitorWorker::start()
 	return -1;
 }
 
+/* If the thread is allocated, set done to true. Give the 
+ * thread a chance to exit. This is unlikely and the thread
+ * will usually exit when the waitEvent times out and then
+ * 'done' is evaluated."
+ */
 void MonitorWorker::exit()
 {
 	if (thread) {
