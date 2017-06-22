@@ -5,12 +5,14 @@
 #include "view.h"
 
 // Qt includes
-#include <QLabel>
 #include <QBoxLayout>
+#include <QFuture>
+#include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QTabWidget>
 #include <QTextEdit>
+#include <QTimer>
 
 Window::Window(QWidget * parent) 
 	: QWidget(parent) 
@@ -75,6 +77,10 @@ RecordTab::RecordTab(QWidget * parent)
 
 	setLayout(mainLayout);
 
+	QTimer *timer = new QTimer(this);
+	connect(timer, SIGNAL (timeout()), this, SLOT (updateRecordData()));
+	timer->start(250);
+	
 }
 
 void Window::addRecord()
@@ -85,6 +91,14 @@ void Window::addRecord()
 void Window::removeRecord()
 {
 	tabWidget->removeTab(tabWidget->currentIndex());
+}
+
+void RecordTab::updateRecordData() 
+{
+	std::string ret;
+	ret = model->getRecordData();
+	recordData = QString(ret.c_str());
+	recordText->setText(recordData);
 }
 
 void RecordTab::updateRecordName(const QString & recordName)

@@ -29,7 +29,6 @@ void MonitorRunnable::updateRecordData ()
 	monitorData->getPVStructure()->dumpValue(dumpStream);
 
 	*recordData = dumpStream.str();
-	cout << *recordData << endl;
 }
 
 void MonitorRunnable::run () 

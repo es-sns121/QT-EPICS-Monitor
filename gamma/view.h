@@ -17,10 +17,10 @@ class RecordTab : public QWidget {
 
 	public :
 		explicit RecordTab(QWidget * parent = 0);
-
 	private slots :
 		void updateRecordName(const QString & recordName);
 		void connectToRecord();
+		void updateRecordData();
 
 	private :
 		QString recordName;
@@ -42,7 +42,7 @@ class Window : public QWidget {
 	private slots :
 		void addRecord();
 		void removeRecord();
-		
+
 	private :
 		QTabWidget * tabWidget;
 		QPushButton * addRecordButton;

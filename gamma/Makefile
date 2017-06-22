@@ -1,40 +1,55 @@
-all: qtTabularClient moc_output.cpp model.o
+EXE = qtTabularClient
+OBJ = model.o monitorWorker.o moc_output.o view.o
+MOC = moc_output.cpp
 
-CPP_FLAGS = -Wall -g
+all: $(EXE) $(OBJ) $(MOC) 
+
+CPP_FLAGS = -Wall -g -lpthread -lm 
 
 # ====================   Qt includes and libs ===============================
 
-INC += -I$(QT_INC) -I$(QT_INC)/Qt -I$(QT_INC)/QtCore -I$(QT_INC)/QtGui 
-LIB += -L$(QT_LIB) -lQtCore -lQtGui -lm -lpthread 
+QT_INCLUDE += -I$(QT_INC) -I$(QT_INC)/Qt -I$(QT_INC)/QtCore -I$(QT_INC)/QtGui 
+QT_LIBRARY += -L$(QT_LIB) -lQtCore -lQtGui -lm -lpthread 
 
 # ===================   EPICS V3 and V4 includes and libs ====================
 
-INC +=  -I$(EPICS_V3_DIR)/include                    \
-		-I$(EPICS_V3_DIR)/include/compiler/gcc       \
-		-I$(EPICS_V3_DIR)/include/valgrind           \
-		-I$(EPICS_V3_DIR)/include/os/$(HOST_OS)      \
-		-I$(EPICS_V4_DIR)/pvAccessCPP/include        \
-		-I$(EPICS_V4_DIR)/pvDataCPP/include          \
-		-I$(EPICS_V4_DIR)/normativeTypesCPP/include  \
-		-I$(EPICS_V4_DIR)/pvaClientCPP/include       \
-		-I$(EPICS_V4_DIR)/pvCommonCPP/include
+EPICS_INCLUDE += -I$(EPICS_V3_DIR)/include                   \
+				-I$(EPICS_V3_DIR)/include/compiler/gcc       \
+				-I$(EPICS_V3_DIR)/include/valgrind           \
+				-I$(EPICS_V3_DIR)/include/os/$(HOST_OS)      \
+				-I$(EPICS_V4_DIR)/pvAccessCPP/include        \
+				-I$(EPICS_V4_DIR)/pvDataCPP/include          \
+				-I$(EPICS_V4_DIR)/normativeTypesCPP/include  \
+				-I$(EPICS_V4_DIR)/pvaClientCPP/include       \
+				-I$(EPICS_V4_DIR)/pvCommonCPP/include
 
-LIB +=  -L$(EPICS_V3_DIR)/lib/$(EPICS_HOST_ARCH) -lCom \
-		-L$(EPICS_V4_DIR)/pvDataCPP/lib/$(EPICS_HOST_ARCH) -lpvData \
-		-L$(EPICS_V4_DIR)/pvAccessCPP/lib/$(EPICS_HOST_ARCH) -lpvAccess \
-		-L$(EPICS_V4_DIR)/pvCommonCPP/lib/$(EPICS_HOST_ARCH) -lpvMB \
-		-L$(EPICS_V4_DIR)/pvaClientCPP/lib/$(EPICS_HOST_ARCH) -lpvaClient \
-		-L$(EPICS_V4_DIR)/normativeTypesCPP/lib/$(EPICS_HOST_ARCH) -lnt \
-		-lpthread -lm 
+EPICS_LIBRARY += -L$(EPICS_V3_DIR)/lib/$(EPICS_HOST_ARCH) -lCom                   \
+				-L$(EPICS_V4_DIR)/pvDataCPP/lib/$(EPICS_HOST_ARCH) -lpvData       \
+				-L$(EPICS_V4_DIR)/pvAccessCPP/lib/$(EPICS_HOST_ARCH) -lpvAccess   \
+				-L$(EPICS_V4_DIR)/pvCommonCPP/lib/$(EPICS_HOST_ARCH) -lpvMB       \
+				-L$(EPICS_V4_DIR)/pvaClientCPP/lib/$(EPICS_HOST_ARCH) -lpvaClient \
+				-L$(EPICS_V4_DIR)/normativeTypesCPP/lib/$(EPICS_HOST_ARCH) -lnt   
 
-qtTabularClient: main.cpp moc_output.cpp model.o
-	g++ $(CPP_FLAGS) $(INC) $(LIB) -o qtTabularClient main.cpp moc_output.cpp view.cpp model.o monitorWorker.cpp
+INC += $(EPICS_INCLUDE) $(QT_INCLUDE)
+LIB += $(EPICS_LIBRARY) $(QT_LIBRARY)
 
-model.o: model.h model.cpp monitorWorker.h monitorWorker.cpp
-	g++ $(CPP_FLAGS) $(INC) $(LIB) -c model.cpp monitorWorker.cpp
+qtTabularClient: main.cpp $(OBJ) 
+	g++ $(CPP_FLAGS) $(INC) $(LIB) -o qtTabularClient main.cpp $(OBJ) 
 
-moc_output.cpp: view.h view.cpp
+view.o: view.h view.cpp model.o
+	g++ $(CPP_FLAGS) $(INC) $(LIB) -o view.o -c view.cpp
+
+model.o: model.h model.cpp
+	g++ $(CPP_FLAGS) $(EPICS_INCLUDE) $(EPICS_LIBRARY) -o model.o -c model.cpp
+
+monitorWorker.o: monitorWorker.h monitorWorker.cpp
+	g++ $(CPP_FLAGS) $(EPICS_INCLUDE) $(EPICS_LIBRARY) -o monitorWorker.o -c monitorWorker.cpp
+
+moc_output.o: moc_output.cpp 
+	g++ $(CPP_FLAGS) $(INC) $(LIB) -o moc_output.o -c moc_output.cpp
+
+moc_output.cpp: view.h
 	moc -o moc_output.cpp view.h
 
 clean: 
-	rm -f moc_output.cpp qtTabularClient model.o
+	rm -f $(EXE) $(OBJ) $(MOC) 

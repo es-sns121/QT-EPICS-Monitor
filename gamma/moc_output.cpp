@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'view.h'
 **
-** Created: Thu Jun 22 10:11:12 2017
+** Created: Thu Jun 22 12:17:13 2017
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_RecordTab[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       2,   14, // methods
+       3,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -33,13 +33,14 @@ static const uint qt_meta_data_RecordTab[] = {
  // slots: signature, parameters, type, tag, flags
       22,   11,   10,   10, 0x08,
       48,   10,   10,   10, 0x08,
+      66,   10,   10,   10, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_RecordTab[] = {
     "RecordTab\0\0recordName\0updateRecordName(QString)\0"
-    "connectToRecord()\0"
+    "connectToRecord()\0updateRecordData()\0"
 };
 
 void RecordTab::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -50,6 +51,7 @@ void RecordTab::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         switch (_id) {
         case 0: _t->updateRecordName((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         case 1: _t->connectToRecord(); break;
+        case 2: _t->updateRecordData(); break;
         default: ;
         }
     }
@@ -87,9 +89,9 @@ int RecordTab::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 2)
+        if (_id < 3)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 2;
+        _id -= 3;
     }
     return _id;
 }
