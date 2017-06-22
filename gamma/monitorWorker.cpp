@@ -9,8 +9,7 @@ using namespace std;
 using namespace epics::pvaClient;
 using namespace epics::monitorWorker;
 
-MonitorRunnable::MonitorRunnable (PvaClientMonitorPtr monitor,
-								  string * recordData)
+MonitorRunnable::MonitorRunnable (PvaClientMonitorPtr monitor, string * recordData)
 				: done(false), isDone(new epicsEvent), monitor(monitor), recordData(recordData)
 {	
 }
