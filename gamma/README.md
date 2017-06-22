@@ -19,10 +19,13 @@ the PATH variable or its equivalent.
 ## Shell Variables
 
 The Makefile expects certain shell variables to be set. 
-	'EPICS_V3_DIR' : The topmost directory of the EPICS v3 install
-	'EPICS_V4_DIR' : The topmost directory of the EPICS v4 install
-	'EPICS_HOST_ARCH' : The host architecture of the system.
-		An example would be "linux-x86_64".
+
+'EPICS\_V3\_DIR' : The topmost directory of the EPICS v3 install
+
+'EPICS\_V4\_DIR' : The topmost directory of the EPICS v4 install
+
+'EPICS\_HOST\_ARCH' : The host architecture of the system.
+An example would be "linux-x86\_64".
 
 ## Building
 
