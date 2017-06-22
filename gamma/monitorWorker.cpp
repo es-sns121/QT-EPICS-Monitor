@@ -74,3 +74,17 @@ int MonitorWorker::start()
 
 	return -1;
 }
+
+bool MonitorWorker::isActive()
+{
+	if (thread == NULL) return false;
+	if (thread->isSuspended()) return true;
+	if (thread->isCurrentThread()) return true;
+
+	return false;
+}
+
+void MonitorWorker::exit()
+{
+	thread->exit();
+}

@@ -34,6 +34,9 @@ class MonitorWorker {
 		~MonitorWorker();
 	
 		int start();
+		bool isActive();
+		void exit();
+		
 		std::string getErrMsg () { return errorMsg; }	
 	
 	private:
