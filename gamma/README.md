@@ -24,8 +24,9 @@ The Makefile expects certain shell variables to be set.
 
 'EPICS\_V4\_DIR' : The topmost directory of the EPICS v4 install
 
-'EPICS\_HOST\_ARCH' : The host architecture of the system.
-An example would be "linux-x86\_64".
+'EPICS\_HOST\_ARCH' : The host architecture of the system. An example would be "linux-x86\_64".
+
+'LD\_LIBRARY\_PATH' should include all of the EPICS v3 and v4 module library paths.
 
 ## Building
 
