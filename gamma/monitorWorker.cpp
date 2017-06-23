@@ -1,3 +1,11 @@
+/*
+ *	monitorWorker.cpp
+ *
+ *	Implementations for monitorRunnable and monitorWorker
+ *	member functions.
+ *
+ */
+
 #include "monitorWorker.h"
 
 #include <sstream>
@@ -10,15 +18,11 @@ using namespace epics::pvaClient;
 using namespace epics::monitorWorker;
 
 MonitorRunnable::MonitorRunnable (PvaClientMonitorPtr monitor, string * recordData)
-				: done(false), isDone(new epicsEvent), monitor(monitor), recordData(recordData)
+				: done(false), monitor(monitor), recordData(recordData)
 {	
 }
 
-MonitorRunnable::~MonitorRunnable ()
-{
-	delete isDone;	
-}
-
+/* Update the runnable's copy of the record's data */
 void MonitorRunnable::updateRecordData ()
 {
 	stringstream dumpStream;
@@ -31,9 +35,10 @@ void MonitorRunnable::updateRecordData ()
 	
 /* Only update the data if its changed */
 	if (*recordData != dumpString)
-	*recordData = dumpStream.str();
+	*recordData = dumpString;
 }
 
+/* Monitor the record's data. Update if it changes. Poll to check if thread should exit.  */
 void MonitorRunnable::run () 
 {
 	monitorData = monitor->getData();
@@ -47,7 +52,8 @@ void MonitorRunnable::run ()
 	/* Release every half second so the thread has a chance to quit without
 	 * being updated */
 		result = monitor->waitEvent(.5);
-		
+	
+	/* If an event occured it must be released before the thread exits */
 		if (done) {
 			if (result)
 				monitor->releaseEvent();
@@ -61,6 +67,7 @@ void MonitorRunnable::run ()
 	}
 }
 
+/* Instantiate members and check if conditions to start the runnable are met.  */
 MonitorWorker::MonitorWorker (PvaClientMonitorPtr monitor, string * recordData)
 			  : isSafe(true),
 			    runnable(new MonitorRunnable(monitor, recordData)), 
@@ -91,7 +98,7 @@ int MonitorWorker::start()
 /* If the thread is allocated, set done to true. Give the 
  * thread a chance to exit. This is unlikely and the thread
  * will usually exit when the waitEvent times out and then
- * 'done' is evaluated."
+ * 'done' is evaluated in MonitorRunnable::run().
  */
 void MonitorWorker::exit()
 {

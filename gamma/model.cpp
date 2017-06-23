@@ -1,3 +1,10 @@
+/*
+ *	model.cpp
+ *
+ *	Implementation of model class's
+ *	connect() member function.
+ *
+ */
 
 #include "model.h"
 

@@ -1,3 +1,10 @@
+/*
+ *	main.cpp
+ *
+ *	Main entry point of application. Starts a QApplication
+ *	and instantiates a Window class. The app is then
+ *	executed.
+ */
 
 #include <iostream>
 #include <QApplication>
