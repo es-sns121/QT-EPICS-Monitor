@@ -5,7 +5,7 @@
  *	model.h
  *
  *	Class definition of the application's
- *	model.
+ *	models.
  *
  */
 

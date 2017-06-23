@@ -36,7 +36,9 @@ class RecordTab : public QWidget {
 
 	public :
 		explicit RecordTab(QWidget * parent = 0);
+	/* Stops the model's thread */
 		void stop() { model->stop(); }
+	
 	private slots :
 		void updateRecordName(const QString & recordName);
 		void connectToRecord();
@@ -46,7 +48,9 @@ class RecordTab : public QWidget {
 		QString recordName;
 		QString recordData;
 		QLabel * recordLabel;
+	/* Text box that record name is entered in */
 		QLineEdit * recordLine;
+	/* Text box that record data is displayed in */
 		QTextEdit * recordText;
 
 		MonitorModel * model;
@@ -62,6 +66,7 @@ class Window : public QWidget {
 	public : 
 		explicit Window(QWidget * parent = 0);
 
+/* Add and remove record tabs */
 	private slots :
 		void addRecord();
 		void removeRecord();
@@ -69,6 +74,7 @@ class Window : public QWidget {
 	private :
 	/* Hosts the RecordTabs */
 		QTabWidget * tabWidget;
+	/* Calls RecordTab::stop() to stop the thread running in the tab */
 		void stopTab();
 		QPushButton * addRecordButton;
 };
