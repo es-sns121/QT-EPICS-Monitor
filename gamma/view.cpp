@@ -101,7 +101,7 @@ RecordTab::RecordTab(QWidget * parent)
  * update the record data at a set polling rate of 250 milliseconds. */
 	QTimer *timer = new QTimer(this);
 	connect(timer, SIGNAL (timeout()), this, SLOT (updateRecordData()));
-	timer->start(250);
+	timer->start(0);
 	
 }
 

@@ -102,7 +102,7 @@ int MonitorWorker::start()
  */
 void MonitorWorker::exit()
 {
-	if (thread) {
+	if (this != NULL) {
 		runnable->setDone(true);
 		thread->exitWait(.1);
 	}

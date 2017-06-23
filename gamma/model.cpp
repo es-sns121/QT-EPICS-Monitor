@@ -39,9 +39,9 @@ bool MonitorModel::connect(const string & recordName)
 
 		*recordData = recordStream.str();
 	
-		if(monitorWorker)
+		if (monitorWorker != NULL)
 			monitorWorker->exit();
-		
+
 		monitorWorker = new MonitorWorker(channel->monitor(""), recordData);
 		monitorWorker->start();
 	
